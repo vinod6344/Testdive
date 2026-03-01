@@ -1,10 +1,16 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 // TestDive API client - connects to our backend
 export const testdiveApi = {
   // Fetch all movies
   fetchMovies: async () => {
     try {
+      // If no backend URL is set (production), use mock data directly
+      if (!import.meta.env.VITE_API_URL) {
+        console.log('No API URL set, using mock data');
+        return mockMovies;
+      }
+      
       const response = await fetch(`${API_BASE_URL}/movies`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
